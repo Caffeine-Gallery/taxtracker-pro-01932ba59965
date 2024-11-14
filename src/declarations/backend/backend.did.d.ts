@@ -12,6 +12,8 @@ export interface _SERVICE {
   'addTaxPayer' : ActorMethod<[string, string, string, string], undefined>,
   'getAllTaxPayers' : ActorMethod<[], Array<TaxPayer>>,
   'getTaxPayer' : ActorMethod<[string], Array<TaxPayer>>,
+  'getTaxPayerByField' : ActorMethod<[string, string], Array<TaxPayer>>,
+  'searchTaxPayer' : ActorMethod<[string], Array<TaxPayer>>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

@@ -1,3 +1,4 @@
+import Bool "mo:base/Bool";
 import Func "mo:base/Func";
 import Hash "mo:base/Hash";
 
@@ -43,6 +44,31 @@ actor {
             case (?taxPayer) { return [taxPayer]; };
             case (null) { return []; };
         };
+    };
+
+    // Function to search for a TaxPayer by any field
+    public query func searchTaxPayer(searchTerm : Text) : async [TaxPayer] {
+        let lowerSearchTerm = Text.toLowercase(searchTerm);
+        return Iter.toArray(Iter.filter(taxPayers.vals(), func (taxPayer : TaxPayer) : Bool {
+            return Text.contains(Text.toLowercase(taxPayer.tid), #text lowerSearchTerm) or
+                   Text.contains(Text.toLowercase(taxPayer.firstName), #text lowerSearchTerm) or
+                   Text.contains(Text.toLowercase(taxPayer.lastName), #text lowerSearchTerm) or
+                   Text.contains(Text.toLowercase(taxPayer.address), #text lowerSearchTerm);
+        }));
+    };
+
+    // Function to search for a TaxPayer by a specific field
+    public query func getTaxPayerByField(field : Text, searchTerm : Text) : async [TaxPayer] {
+        let lowerSearchTerm = Text.toLowercase(searchTerm);
+        return Iter.toArray(Iter.filter(taxPayers.vals(), func (taxPayer : TaxPayer) : Bool {
+            switch (field) {
+                case ("tid") { return Text.contains(Text.toLowercase(taxPayer.tid), #text lowerSearchTerm); };
+                case ("firstName") { return Text.contains(Text.toLowercase(taxPayer.firstName), #text lowerSearchTerm); };
+                case ("lastName") { return Text.contains(Text.toLowercase(taxPayer.lastName), #text lowerSearchTerm); };
+                case ("address") { return Text.contains(Text.toLowercase(taxPayer.address), #text lowerSearchTerm); };
+                case _ { return false; };
+            };
+        }));
     };
 
     // Preupgrade function to save state

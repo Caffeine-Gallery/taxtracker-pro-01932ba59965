@@ -36,7 +36,14 @@
             <div class="col-md-6">
                 <h2>Search TaxPayer</h2>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="searchTid" placeholder="Enter TID to search">
+                    <input type="text" class="form-control" id="searchTerm" placeholder="Enter search term">
+                    <select class="form-select" id="searchField">
+                        <option value="all">All Fields</option>
+                        <option value="tid">TID</option>
+                        <option value="firstName">First Name</option>
+                        <option value="lastName">Last Name</option>
+                        <option value="address">Address</option>
+                    </select>
                     <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
                 </div>
                 <div id="searchResult"></div>

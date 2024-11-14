@@ -9,4 +9,6 @@ service : {
   addTaxPayer: (text, text, text, text) -> ();
   getAllTaxPayers: () -> (vec TaxPayer) query;
   getTaxPayer: (text) -> (vec TaxPayer) query;
+  getTaxPayerByField: (text, text) -> (vec TaxPayer) query;
+  searchTaxPayer: (text) -> (vec TaxPayer) query;
 }

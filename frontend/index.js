@@ -2,7 +2,8 @@ import { backend } from 'declarations/backend';
 
 const addTaxPayerForm = document.getElementById('addTaxPayerForm');
 const searchButton = document.getElementById('searchButton');
-const searchTid = document.getElementById('searchTid');
+const searchTerm = document.getElementById('searchTerm');
+const searchField = document.getElementById('searchField');
 const searchResult = document.getElementById('searchResult');
 const taxPayerList = document.getElementById('taxPayerList');
 
@@ -32,24 +33,33 @@ addTaxPayerForm.addEventListener('submit', async (e) => {
 
 // Function to search for a TaxPayer
 searchButton.addEventListener('click', async () => {
-    const tid = searchTid.value;
-    if (!tid) return;
+    const term = searchTerm.value;
+    const field = searchField.value;
+    if (!term) return;
 
     searchResult.innerHTML = showLoading();
     try {
-        const result = await backend.getTaxPayer(tid);
-        if (result.length === 0) {
-            searchResult.innerHTML = '<div class="alert alert-warning">No TaxPayer found with this TID</div>';
+        let result;
+        if (field === 'all') {
+            result = await backend.searchTaxPayer(term);
         } else {
-            searchResult.innerHTML = `
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${result[0].firstName} ${result[0].lastName}</h5>
-                        <p class="card-text">TID: ${result[0].tid}</p>
-                        <p class="card-text">Address: ${result[0].address}</p>
+            result = await backend.getTaxPayerByField(field, term);
+        }
+        if (result.length === 0) {
+            searchResult.innerHTML = '<div class="alert alert-warning">No TaxPayer found with this search term</div>';
+        } else {
+            searchResult.innerHTML = '';
+            result.forEach(taxPayer => {
+                searchResult.innerHTML += `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">${taxPayer.firstName} ${taxPayer.lastName}</h5>
+                            <p class="card-text">TID: ${taxPayer.tid}</p>
+                            <p class="card-text">Address: ${taxPayer.address}</p>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            });
         }
     } catch (error) {
         console.error('Error searching TaxPayer:', error);
